@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<mavlink>
+  <include>common.xml</include>
+  <version>3</version>
+  <dialect>0</dialect>
+  <enums>
+    <!-- ===== 自定义指令枚举 ===== -->
+    <enum name="HK_CMD">
+      <description>蜂巢智控自定义 MAV_CMD（通过 COMMAND_LONG 下发）</description>
+      <!-- 作战指令 51000~51002 -->
+      <entry value="51000" name="HK_CMD_ASSIGN_TARGET">
+        <description>装订目标</description>
+      </entry>
+      <entry value="51001" name="HK_CMD_TRACK_TARGET">
+        <description>跟踪目标</description>
+      </entry>
+      <entry value="51002" name="HK_CMD_IMPACT_TARGET">
+        <description>撞击目标</description>
+      </entry>
+      <!-- 载荷控制指令 52000~52004 -->
+      <entry value="52000" name="HK_CMD_DO_MOUNT_CONTROL">
+        <description>云台控制</description>
+        <param index="1">pitch（°）</param>
+        <param index="2">roll</param>
+        <param index="3">yaw（°）</param>
+      </entry>
+      <entry value="52001" name="HK_CMD_IMAGE_START_CAPTURE">
+        <description>拍照</description>
+      </entry>
+      <entry value="52002" name="HK_CMD_VIDEO_START_CAPTURE">
+        <description>开始录像</description>
+      </entry>
+      <entry value="52003" name="HK_CMD_VIDEO_STOP_CAPTURE">
+        <description>停止录像</description>
+      </entry>
+      <entry value="52004" name="HK_CMD_SET_CAMERA_MODE">
+        <description>载荷切换</description>
+        <param index="1">camera_id</param>
+      </entry>
+      <!-- 行为配置指令 53000 -->
+      <entry value="53000" name="HK_CMD_SET_BEHAVIOR">
+        <description>失联行为配置</description>
+        <param index="1">行为类型（0=悬停, 1=返航）</param>
+        <param index="2">触发时间（s）</param>
+        <param index="3">功能开关（0=关, 1=开）</param>
+      </entry>
+      <!-- 发射箱指令 61000~61001 -->
+      <entry value="61000" name="HK_CMD_LID_OPEN">
+        <description>发射箱开盖</description>
+        <param index="1">1=开 / 0=关</param>
+      </entry>
+      <entry value="61001" name="HK_CMD_LOCK_RELEASE">
+        <description>发射箱电磁锁扣解锁</description>
+        <param index="1">1=解锁 / 0=锁定</param>
+      </entry>
+    </enum>
+
+    <!-- ===== AI 状态 ===== -->
+    <enum name="AI_STATUS_FLAG">
+      <description>AI 模块运行状态</description>
+      <entry value="0" name="AI_STATUS_NORMAL"><description>正常</description></entry>
+      <entry value="1" name="AI_STATUS_FAULT"><description>故障</description></entry>
+    </enum>
+
+    <!-- ===== 电机状态 ===== -->
+    <enum name="MOTOR_STATUS_FLAG">
+      <description>电机运行状态</description>
+      <entry value="0" name="MOTOR_STATUS_NORMAL"><description>正常</description></entry>
+      <entry value="1" name="MOTOR_STATUS_FAULT"><description>故障</description></entry>
+    </enum>
+
+    <!-- ===== 发射箱舱盖 ===== -->
+    <enum name="LID_STATUS">
+      <description>发射箱舱盖状态</description>
+      <entry value="0" name="LID_CLOSED"><description>已关闭</description></entry>
+      <entry value="1" name="LID_OPENED"><description>已开启</description></entry>
+    </enum>
+
+    <!-- ===== 发射箱锁扣 ===== -->
+    <enum name="LOCK_STATUS">
+      <description>发射箱电磁锁扣状态</description>
+      <entry value="0" name="LOCK_LOCKED"><description>已锁定</description></entry>
+      <entry value="1" name="LOCK_RELEASED"><description>已解锁</description></entry>
+    </enum>
+
+    <!-- ===== 杀伤等级 ===== -->
+    <enum name="KILL_LEVEL">
+      <description>撞击杀伤等级</description>
+      <entry value="0" name="KILL_DESTROYED"><description>摧毁</description></entry>
+      <entry value="1" name="KILL_HEAVY_DAMAGE"><description>重创</description></entry>
+      <entry value="2" name="KILL_LIGHT_DAMAGE"><description>轻伤</description></entry>
+    </enum>
+  </enums>
+
+  <messages>
+    <!-- ===== 50000~50003：无人机 ↔ 地面站 ===== -->
+
+    <!-- 50000: 机载 AI 状态 -->
+    <message id="50000" name="HK_AI_STATUS">
+      <description>机载 AI 模块运行时状态。发送方 SYSID 由 MAVLink 帧头标识</description>
+      <field type="char[20]" name="ai_model_name">AI 模型名称</field>
+      <field type="char[10]" name="ai_version">模型版本号</field>
+      <field type="uint8_t" name="ai_status" enum="AI_STATUS_FLAG">0=正常, 1=故障</field>
+      <field type="uint16_t" name="ai_fault_code">故障代码（正常时 0）</field>
+      <field type="uint8_t" name="gpu_usage">GPU 使用率（%）</field>
+      <field type="int8_t" name="gpu_temperature">GPU 温度（°C）</field>
+      <field type="uint16_t" name="ai_response_time">推理响应时间（ms）</field>
+    </message>
+
+    <!-- 50001: 电机状态 -->
+    <message id="50001" name="HK_MOTOR_STATUS">
+      <description>单个电机实时运行参数，多条消息组成完整电机列表</description>
+      <field type="uint8_t" name="motor_index">电机序号（从 0 开始）</field>
+      <field type="uint16_t" name="motor_rpm">转速（RPM）</field>
+      <field type="int8_t" name="motor_temperature">电机温度（°C）</field>
+      <field type="uint8_t" name="motor_thrust">推力输出百分比（%）</field>
+      <field type="uint8_t" name="motor_status" enum="MOTOR_STATUS_FLAG">0=正常, 1=故障</field>
+    </message>
+
+    <!-- 50002: 撞击确认 -->
+    <message id="50002" name="HK_IMPACT_CONFIRM">
+      <description>无人机撞击目标后的确认上报，地面站据此创建拦截记录</description>
+      <field type="uint8_t" name="target_id">目标 ID</field>
+      <field type="int16_t" name="target_speed">目标速度（cm/s）</field>
+      <field type="int16_t" name="drone_speed">无人机速度（cm/s）</field>
+      <field type="int32_t" name="impact_lat">撞击点纬度（度 × 10^7）</field>
+      <field type="int32_t" name="impact_lon">撞击点经度（度 × 10^7）</field>
+      <field type="int32_t" name="impact_alt">撞击点海拔高度（mm）</field>
+      <field type="uint8_t" name="kill_level" enum="KILL_LEVEL">0=摧毁, 1=重创, 2=轻伤</field>
+    </message>
+
+    <!-- 50003: 目标态势信息（GCS → 无人机） -->
+    <message id="50003" name="HK_TARGET_SITUATION">
+      <description>地面站向指定无人机下发目标态势信息（位置、速度、标准差）</description>
+      <field type="uint8_t" name="target_sysid">目标无人机系统 ID（消息接收方）</field>
+      <field type="int32_t" name="target_lat">目标纬度（度 × 10^7）</field>
+      <field type="int32_t" name="target_lon">目标经度（度 × 10^7）</field>
+      <field type="int32_t" name="target_alt">目标海拔高度（mm）</field>
+      <field type="int32_t" name="speed_north">北向速度（cm/s）</field>
+      <field type="int32_t" name="speed_east">东向速度（cm/s）</field>
+      <field type="int32_t" name="speed_down">地向速度（cm/s）</field>
+      <field type="int16_t" name="lat_std">纬度标准差（0.01°）</field>
+      <field type="int16_t" name="lon_std">经度标准差（0.01°）</field>
+      <field type="int16_t" name="alt_std">高度标准差（0.1 m）</field>
+      <field type="int16_t" name="ned_speed_north_std">北向速度标准差（cm/s）</field>
+      <field type="int16_t" name="ned_speed_east_std">东向速度标准差（cm/s）</field>
+      <field type="int16_t" name="ned_speed_down_std">地向速度标准差（cm/s）</field>
+      <field type="uint8_t" name="validity_mask">字段有效性掩码（bit0=位置, bit1=位置标准差, bit2=速度, bit3=速度标准差）</field>
+    </message>
+
+    <!-- ===== 60000~60002：发射箱 / GNSS ↔ 地面站 ===== -->
+
+    <!-- 60000: 发射箱状态 -->
+    <message id="60000" name="HK_LAUNCHER_STATUS">
+      <description>发射箱基础状态、位置和装载信息</description>
+      <field type="uint8_t" name="lid_status" enum="LID_STATUS">0=已关闭, 1=已开启</field>
+      <field type="uint8_t" name="lock_status" enum="LOCK_STATUS">0=已锁定, 1=已解锁</field>
+      <field type="uint8_t" name="box_battery">发射箱电量（%）</field>
+      <field type="uint8_t" name="ready_count">待发射无人机数量</field>
+      <field type="uint8_t" name="total_count">已装载无人机总数</field>
+      <field type="int32_t" name="launcer_lat">纬度（度 × 10^7）</field>
+      <field type="int32_t" name="launcer_lon">经度（度 × 10^7）</field>
+      <field type="int32_t" name="launcer_alt">海拔高度（mm）</field>
+    </message>
+
+    <!-- 60001: 待发射无人机列表 -->
+    <message id="60001" name="HK_LAUNCHER_DETAIL">
+      <description>发射箱内单架待发射无人机的详细信息，多条消息组成完整列表</description>
+      <field type="uint8_t" name="drone_index">待发射无人机序号</field>
+      <field type="char[20]" name="drone_name">无人机名称/编号</field>
+      <field type="char[20]" name="drone_model">无人机型号名称</field>
+    </message>
+
+    <!-- 70000: 地面站 GNSS 位置 -->
+    <message id="70000" name="HK_GCS_POSITION">
+      <description>地面站自身 GNSS 模块位置，用于计算距离和方位角</description>
+      <field type="int32_t" name="gcs_lat">纬度（度 × 10^7）</field>
+      <field type="int32_t" name="gcs_lon">经度（度 × 10^7）</field>
+      <field type="int32_t" name="gcs_alt">海拔高度（mm）</field>
+    </message>
+  </messages>
+</mavlink>
