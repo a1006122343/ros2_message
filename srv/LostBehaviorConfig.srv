@@ -1,0 +1,5 @@
+uint8 behavior
+uint16 trigger_seconds
+uint8 enabled
+---
+bool success
