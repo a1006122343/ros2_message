@@ -1,12 +1,12 @@
 /** @file
- *  @brief MAVLink comm protocol built from hivemind.xml
+ *  @brief MAVLink comm protocol built from standard.xml
  *  @see http://mavlink.org
  */
 #pragma once
 #ifndef MAVLINK_H
 #define MAVLINK_H
 
-#define MAVLINK_PRIMARY_XML_HASH 2114188862703987639
+#define MAVLINK_PRIMARY_XML_HASH -5501257677127400044
 
 #ifndef MAVLINK_STX
 #define MAVLINK_STX 253
@@ -29,6 +29,6 @@
 #endif
 
 #include "version.h"
-#include "hivemind.h"
+#include "standard.h"
 
 #endif // MAVLINK_H

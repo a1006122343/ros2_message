@@ -97,14 +97,19 @@
 
     <!-- 50000: 机载 AI 状态 -->
     <message id="50000" name="HK_AI_STATUS">
-      <description>机载 AI 模块运行时状态。发送方 SYSID 由 MAVLink 帧头标识</description>
-      <field type="char[20]" name="ai_model_name">AI 模型名称</field>
-      <field type="char[10]" name="ai_version">模型版本号</field>
-      <field type="uint8_t" name="ai_status" enum="AI_STATUS_FLAG">0=正常, 1=故障</field>
-      <field type="uint16_t" name="ai_fault_code">故障代码（正常时 0）</field>
+      <description>机载 AI 模块运行时状态。发送方 SYSID 由 MAVLink 帧头标识。本消息同时携带飞行控制 AI 与跟踪算法 AI 的状态，GPU 信息为两者共用</description>
+      <field type="char[20]" name="fc_model_name">飞行控制 AI 模型名称</field>
+      <field type="char[10]" name="fc_version">飞行控制 AI 版本号</field>
+      <field type="uint8_t" name="fc_status" enum="AI_STATUS_FLAG">飞行控制 AI 状态：0=正常, 1=故障</field>
+      <field type="uint16_t" name="fc_fault_code">飞行控制 AI 故障代码（正常时 0）</field>
+      <field type="uint16_t" name="fc_response_time">飞行控制 AI 推理响应时间（ms）</field>
+      <field type="char[20]" name="track_model_name">跟踪算法 AI 模型名称</field>
+      <field type="char[10]" name="track_version">跟踪算法 AI 版本号</field>
+      <field type="uint8_t" name="track_status" enum="AI_STATUS_FLAG">跟踪算法 AI 状态：0=正常, 1=故障</field>
+      <field type="uint16_t" name="track_fault_code">跟踪算法 AI 故障代码（正常时 0）</field>
+      <field type="uint16_t" name="track_response_time">跟踪算法 AI 推理响应时间（ms）</field>
       <field type="uint8_t" name="gpu_usage">GPU 使用率（%）</field>
       <field type="int8_t" name="gpu_temperature">GPU 温度（°C）</field>
-      <field type="uint16_t" name="ai_response_time">推理响应时间（ms）</field>
     </message>
 
     <!-- 50001: 电机状态 -->

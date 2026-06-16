@@ -37,18 +37,23 @@ static void mavlink_test_hk_ai_status(uint8_t system_id, uint8_t component_id, m
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
     mavlink_hk_ai_status_t packet_in = {
-        17235,17339,"EFGHIJKLMNOPQRSTUVW","YZABCDEFG",235,46,113
+        17235,17339,17443,17547,"IJKLMNOPQRSTUVWXYZA","CDEFGHIJK",247,"NOPQRSTUVWXYZABCDEF","HIJKLMNOP",20,87,154
     };
     mavlink_hk_ai_status_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
-        packet1.ai_fault_code = packet_in.ai_fault_code;
-        packet1.ai_response_time = packet_in.ai_response_time;
-        packet1.ai_status = packet_in.ai_status;
+        packet1.fc_fault_code = packet_in.fc_fault_code;
+        packet1.fc_response_time = packet_in.fc_response_time;
+        packet1.track_fault_code = packet_in.track_fault_code;
+        packet1.track_response_time = packet_in.track_response_time;
+        packet1.fc_status = packet_in.fc_status;
+        packet1.track_status = packet_in.track_status;
         packet1.gpu_usage = packet_in.gpu_usage;
         packet1.gpu_temperature = packet_in.gpu_temperature;
         
-        mav_array_memcpy(packet1.ai_model_name, packet_in.ai_model_name, sizeof(char)*20);
-        mav_array_memcpy(packet1.ai_version, packet_in.ai_version, sizeof(char)*10);
+        mav_array_memcpy(packet1.fc_model_name, packet_in.fc_model_name, sizeof(char)*20);
+        mav_array_memcpy(packet1.fc_version, packet_in.fc_version, sizeof(char)*10);
+        mav_array_memcpy(packet1.track_model_name, packet_in.track_model_name, sizeof(char)*20);
+        mav_array_memcpy(packet1.track_version, packet_in.track_version, sizeof(char)*10);
         
 #ifdef MAVLINK_STATUS_FLAG_OUT_MAVLINK1
         if (status->flags & MAVLINK_STATUS_FLAG_OUT_MAVLINK1) {
@@ -62,12 +67,12 @@ static void mavlink_test_hk_ai_status(uint8_t system_id, uint8_t component_id, m
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_hk_ai_status_pack(system_id, component_id, &msg , packet1.ai_model_name , packet1.ai_version , packet1.ai_status , packet1.ai_fault_code , packet1.gpu_usage , packet1.gpu_temperature , packet1.ai_response_time );
+    mavlink_msg_hk_ai_status_pack(system_id, component_id, &msg , packet1.fc_model_name , packet1.fc_version , packet1.fc_status , packet1.fc_fault_code , packet1.fc_response_time , packet1.track_model_name , packet1.track_version , packet1.track_status , packet1.track_fault_code , packet1.track_response_time , packet1.gpu_usage , packet1.gpu_temperature );
     mavlink_msg_hk_ai_status_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_hk_ai_status_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.ai_model_name , packet1.ai_version , packet1.ai_status , packet1.ai_fault_code , packet1.gpu_usage , packet1.gpu_temperature , packet1.ai_response_time );
+    mavlink_msg_hk_ai_status_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.fc_model_name , packet1.fc_version , packet1.fc_status , packet1.fc_fault_code , packet1.fc_response_time , packet1.track_model_name , packet1.track_version , packet1.track_status , packet1.track_fault_code , packet1.track_response_time , packet1.gpu_usage , packet1.gpu_temperature );
     mavlink_msg_hk_ai_status_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
@@ -80,7 +85,7 @@ static void mavlink_test_hk_ai_status(uint8_t system_id, uint8_t component_id, m
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_hk_ai_status_send(MAVLINK_COMM_1 , packet1.ai_model_name , packet1.ai_version , packet1.ai_status , packet1.ai_fault_code , packet1.gpu_usage , packet1.gpu_temperature , packet1.ai_response_time );
+    mavlink_msg_hk_ai_status_send(MAVLINK_COMM_1 , packet1.fc_model_name , packet1.fc_version , packet1.fc_status , packet1.fc_fault_code , packet1.fc_response_time , packet1.track_model_name , packet1.track_version , packet1.track_status , packet1.track_fault_code , packet1.track_response_time , packet1.gpu_usage , packet1.gpu_temperature );
     mavlink_msg_hk_ai_status_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
