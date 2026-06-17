@@ -54,6 +54,18 @@ string error_code_name
 string error_message
 string error_source
 
+# Ground-station HK_AI_STATUS compatible track fields.
+# track_model_name current value: "VISION-AI-v2".
+# track_version current value: "2.1.0".
+# track_status: 0=normal, 1=fault.
+# track_fault_code: error_code when faulted, otherwise 0.
+# track_response_time: detect_interval proxy by current ground-station mapping.
+string track_model_name
+string track_version
+uint8 track_status
+uint16 track_fault_code
+uint16 track_response_time
+
 # Stream scheduling state. Use -1 when no stream is selected.
 int8 main_stream_index
 int8 candidate_stream_index
