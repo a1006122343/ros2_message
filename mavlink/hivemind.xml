@@ -55,18 +55,70 @@
       </entry>
     </enum>
 
-    <!-- ===== AI 状态 ===== -->
-    <enum name="AI_STATUS_FLAG">
-      <description>AI 模块运行状态</description>
-      <entry value="0" name="AI_STATUS_NORMAL"><description>正常</description></entry>
-      <entry value="1" name="AI_STATUS_FAULT"><description>故障</description></entry>
+    <!-- ===== GPS 定位类型 ===== -->
+    <enum name="HK_GPS_FIX_TYPE">
+      <description>GPS 定位类型</description>
+      <entry value="0" name="HK_GPS_FIX_TYPE_NONE"><description>无</description></entry>
+      <entry value="1" name="HK_GPS_FIX_TYPE_NONE2"><description>无</description></entry>
+      <entry value="2" name="HK_GPS_FIX_TYPE_2D"><description>2D</description></entry>
+      <entry value="3" name="HK_GPS_FIX_TYPE_3D"><description>3D</description></entry>
+      <entry value="4" name="HK_GPS_FIX_TYPE_RTK_FIXED"><description>RTK 固定</description></entry>
+      <entry value="5" name="HK_GPS_FIX_TYPE_RTK_FLOAT"><description>RTK 浮点</description></entry>
+      <entry value="6" name="HK_GPS_FIX_TYPE_ESTIMATED"><description>估计</description></entry>
+    </enum>
+
+    <!-- ===== 起落状态 ===== -->
+    <enum name="HK_LAND_STATE">
+      <description>起落状态</description>
+      <entry value="0" name="HK_LAND_STATE_UNKNOWN"><description>UNKNOWN</description></entry>
+      <entry value="1" name="HK_LAND_STATE_ON_GROUND"><description>ON_GROUND</description></entry>
+      <entry value="2" name="HK_LAND_STATE_IN_AIR"><description>IN_AIR</description></entry>
+    </enum>
+
+    <!-- ===== 任务状态 ===== -->
+    <enum name="HK_TASK_STATE">
+      <description>任务状态</description>
+      <entry value="0" name="HK_TASK_STATE_WAIT_ATTACK"><description>WAIT_ATTACK</description></entry>
+      <entry value="1" name="HK_TASK_STATE_FLY_TO_TARGET"><description>FLY_TO_TARGET</description></entry>
+      <entry value="2" name="HK_TASK_STATE_ADJUST_PATH"><description>ADJUST_PATH</description></entry>
+      <entry value="3" name="HK_TASK_STATE_ADJUST_ANGLE"><description>ADJUST_ANGLE</description></entry>
+      <entry value="4" name="HK_TASK_STATE_CIRCLE_SEARCH"><description>CIRCLE_SEARCH</description></entry>
+      <entry value="5" name="HK_TASK_STATE_TURN_BACK"><description>TURN_BACK</description></entry>
+      <entry value="6" name="HK_TASK_STATE_WAIT_AUTHORITY"><description>WAIT_AUTHORITY</description></entry>
+    </enum>
+
+    <!-- ===== 制导模式 ===== -->
+    <enum name="HK_GUIDANCE_MODE">
+      <description>制导模式</description>
+      <entry value="0" name="HK_GUIDANCE_MODE_TRACKING_ONLY"><description>TRACKING_ONLY</description></entry>
+      <entry value="1" name="HK_GUIDANCE_MODE_PURE_PURSUIT"><description>PURE_PURSUIT</description></entry>
+      <entry value="2" name="HK_GUIDANCE_MODE_PROPORTIONAL_NAVIGATION"><description>PROPORTIONAL_NAVIGATION</description></entry>
+    </enum>
+
+    <!-- ===== VTOL 状态 ===== -->
+    <enum name="HK_VTOL_STATE">
+      <description>VTOL 状态</description>
+      <entry value="0" name="HK_VTOL_STATE_UNDEFINED"><description>未定义</description></entry>
+      <entry value="1" name="HK_VTOL_STATE_TRANSITION_TO_FW"><description>转FW中</description></entry>
+      <entry value="2" name="HK_VTOL_STATE_TRANSITION_TO_MC"><description>转MC中</description></entry>
+      <entry value="3" name="HK_VTOL_STATE_MC"><description>MC</description></entry>
+      <entry value="4" name="HK_VTOL_STATE_FW"><description>FW</description></entry>
     </enum>
 
     <!-- ===== 电机状态 ===== -->
-    <enum name="MOTOR_STATUS_FLAG">
+    <enum name="HK_MOTOR_STATUS_FLAG">
       <description>电机运行状态</description>
-      <entry value="0" name="MOTOR_STATUS_NORMAL"><description>正常</description></entry>
-      <entry value="1" name="MOTOR_STATUS_FAULT"><description>故障</description></entry>
+      <entry value="0" name="HK_MOTOR_STATUS_NORMAL"><description>正常</description></entry>
+      <entry value="1" name="HK_MOTOR_STATUS_FAULT"><description>故障</description></entry>
+    </enum>
+
+    <!-- ===== mavlink_bridge 状态 ===== -->
+    <enum name="HK_BRIDGE_STATUS">
+      <description>mavlink_bridge 运行状态</description>
+      <entry value="0" name="HK_BRIDGE_STATUS_INITIALIZING"><description>初始化中</description></entry>
+      <entry value="1" name="HK_BRIDGE_STATUS_NORMAL"><description>正常运行</description></entry>
+      <entry value="2" name="HK_BRIDGE_STATUS_WARNING"><description>告警</description></entry>
+      <entry value="3" name="HK_BRIDGE_STATUS_FAULT"><description>故障</description></entry>
     </enum>
 
     <!-- ===== 发射箱舱盖 ===== -->
@@ -94,33 +146,6 @@
 
   <messages>
     <!-- ===== 50000~50003：无人机 ↔ 地面站 ===== -->
-
-    <!-- 50000: 机载 AI 状态 -->
-    <message id="50000" name="HK_AI_STATUS">
-      <description>机载 AI 模块运行时状态。发送方 SYSID 由 MAVLink 帧头标识。本消息同时携带飞行控制 AI 与跟踪算法 AI 的状态，GPU 信息为两者共用</description>
-      <field type="char[20]" name="fc_model_name">飞行控制 AI 模型名称</field>
-      <field type="char[10]" name="fc_version">飞行控制 AI 版本号</field>
-      <field type="uint8_t" name="fc_status" enum="AI_STATUS_FLAG">飞行控制 AI 状态：0=正常, 1=故障</field>
-      <field type="uint16_t" name="fc_fault_code">飞行控制 AI 故障代码（正常时 0）</field>
-      <field type="uint16_t" name="fc_response_time">飞行控制 AI 推理响应时间（ms）</field>
-      <field type="char[20]" name="track_model_name">跟踪算法 AI 模型名称</field>
-      <field type="char[10]" name="track_version">跟踪算法 AI 版本号</field>
-      <field type="uint8_t" name="track_status" enum="AI_STATUS_FLAG">跟踪算法 AI 状态：0=正常, 1=故障</field>
-      <field type="uint16_t" name="track_fault_code">跟踪算法 AI 故障代码（正常时 0）</field>
-      <field type="uint16_t" name="track_response_time">跟踪算法 AI 推理响应时间（ms）</field>
-      <field type="uint8_t" name="gpu_usage">GPU 使用率（%）</field>
-      <field type="int8_t" name="gpu_temperature">GPU 温度（°C）</field>
-    </message>
-
-    <!-- 50001: 电机状态 -->
-    <message id="50001" name="HK_MOTOR_STATUS">
-      <description>单个电机实时运行参数，多条消息组成完整电机列表</description>
-      <field type="uint8_t" name="motor_index">电机序号（从 0 开始）</field>
-      <field type="uint16_t" name="motor_rpm">转速（RPM）</field>
-      <field type="int8_t" name="motor_temperature">电机温度（°C）</field>
-      <field type="uint8_t" name="motor_thrust">推力输出百分比（%）</field>
-      <field type="uint8_t" name="motor_status" enum="MOTOR_STATUS_FLAG">0=正常, 1=故障</field>
-    </message>
 
     <!-- 50002: 撞击确认 -->
     <message id="50002" name="HK_IMPACT_CONFIRM">
@@ -151,6 +176,207 @@
       <field type="int16_t" name="ned_speed_east_std">东向速度标准差（cm/s）</field>
       <field type="int16_t" name="ned_speed_down_std">地向速度标准差（cm/s）</field>
       <field type="uint8_t" name="validity_mask">字段有效性掩码（bit0=位置, bit1=位置标准差, bit2=速度, bit3=速度标准差）</field>
+    </message>
+
+    <!-- ===== 50100~50116：无人机遥测 ===== -->
+
+    <!-- 50100: 位置信息 -->
+    <message id="50100" name="HK_DRONE_POSITION">
+      <description>位置信息，对应 DroneInfo 第 1 组中的位置部分</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="double" name="latitude_deg">纬度（deg），范围 -90~+90</field>
+      <field type="double" name="longitude_deg">经度（deg），范围 -180~+180</field>
+      <field type="double" name="altitude_m">海拔高度（m，AMSL，上为正）</field>
+      <field type="float" name="relative_altitude_m">相对起飞点高度（m，上为正）；home_valid=false 之前为 0（未定义）</field>
+      <field type="float" name="fc_local_x_m">本地北向位置（m），AP 模式下恒为 0</field>
+      <field type="float" name="fc_local_y_m">本地东向位置（m），AP 模式下恒为 0</field>
+      <field type="float" name="fc_local_z_m">本地下向位置（m，下为正）</field>
+    </message>
+
+    <!-- 50101: 速度与加速度 -->
+    <message id="50101" name="HK_DRONE_VELOCITY">
+      <description>速度与加速度，对应 DroneInfo 第 1 组中的速度/加速度部分</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="float" name="velocity_x_mps">NED 北向速度（m/s，北为正）</field>
+      <field type="float" name="velocity_y_mps">NED 东向速度（m/s，东为正）</field>
+      <field type="float" name="velocity_z_mps">NED 下向速度（m/s，下降为正）</field>
+      <field type="float" name="horizontal_speed_mps">水平地速（m/s）</field>
+      <field type="float" name="true_airspeed_mps">真空速（m/s）</field>
+      <field type="float" name="acceleration_x_mps2">NED 北向加速度（m/s²）</field>
+      <field type="float" name="acceleration_y_mps2">NED 东向加速度（m/s²）</field>
+      <field type="float" name="acceleration_z_mps2">NED 下向加速度（m/s²，下降加速为正）</field>
+      <field type="float" name="fc_local_vx_mps">本地北向速度（m/s）</field>
+      <field type="float" name="fc_local_vy_mps">本地东向速度（m/s）</field>
+      <field type="float" name="fc_local_vz_mps">本地下向速度（m/s）</field>
+    </message>
+
+    <!-- 50102: 机体姿态 -->
+    <message id="50102" name="HK_DRONE_ATTITUDE">
+      <description>机体姿态，对应 DroneInfo 第 1 组中的姿态部分</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="float" name="roll_rad">MC 视图 body→world 滚转（rad），范围 -π~+π</field>
+      <field type="float" name="pitch_rad">MC 视图 body→world 俯仰（rad），范围 -π/2~+π/2</field>
+      <field type="float" name="yaw_rad">MC 视图 body→world 偏航（rad），范围 -π~+π</field>
+      <field type="float" name="attitude_qx">body→world 四元数 x 分量（XYZW 顺序，Hamilton 约定，NED）</field>
+      <field type="float" name="attitude_qy">body→world 四元数 y 分量</field>
+      <field type="float" name="attitude_qz">body→world 四元数 z 分量</field>
+      <field type="float" name="attitude_qw">body→world 四元数 w 分量</field>
+      <field type="float" name="angular_velocity_x_radps">机体滚转角速度（rad/s）</field>
+      <field type="float" name="angular_velocity_y_radps">机体俯仰角速度（rad/s）</field>
+      <field type="float" name="angular_velocity_z_radps">机体偏航角速度（rad/s）</field>
+    </message>
+
+    <!-- 50103: 辅助姿态角 -->
+    <message id="50103" name="HK_DRONE_ATTITUDE_BASE">
+      <description>FW 姿态、相机姿态、气流角、速度向量角，对应 DroneInfo 第 1 组中的辅助姿态部分</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="float" name="fw_roll_rad">FW 视图滚转（rad）</field>
+      <field type="float" name="fw_pitch_rad">FW 视图俯仰（rad）</field>
+      <field type="float" name="fw_yaw_rad">FW 视图偏航（rad）</field>
+      <field type="float" name="camera_roll_rad">相机滚转（rad）</field>
+      <field type="float" name="camera_pitch_rad">相机俯仰（rad）</field>
+      <field type="float" name="camera_yaw_rad">相机偏航（rad）</field>
+      <field type="float" name="angle_of_attack_rad">攻角（rad）= velocity_pitch_angle_rad - pitch_rad</field>
+      <field type="float" name="sideslip_angle_rad">侧滑角（rad）= velocity_yaw_angle_rad - yaw_rad</field>
+      <field type="float" name="velocity_yaw_angle_rad">世界系速度向量方向偏航角（rad，NED）</field>
+      <field type="float" name="velocity_pitch_angle_rad">世界系速度向量方向俯仰角（rad，NED）</field>
+    </message>
+
+    <!-- 50104: 飞控心跳 -->
+    <message id="50104" name="HK_DRONE_HEARTBEAT">
+      <description>飞控心跳信息，对应 DroneInfo 第 2 组</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="uint8_t" name="fc_vehicle_type">MAV_TYPE 枚举</field>
+      <field type="uint8_t" name="fc_autopilot">MAV_AUTOPILOT 枚举；12=PX4，3=ArduPilot</field>
+      <field type="uint8_t" name="fc_base_mode">MAV_MODE_FLAG 位掩码；当前仅 armed bit (0x80)</field>
+      <field type="uint32_t" name="fc_custom_mode">自定义模式；PX4 端未填，AP 端未传</field>
+      <field type="uint8_t" name="fc_system_status">MAV_STATE 枚举</field>
+    </message>
+
+    <!-- 50105: 罗盘航向 -->
+    <message id="50105" name="HK_DRONE_HEADING">
+      <description>罗盘航向，对应 DroneInfo 第 3 组</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="float" name="heading_deg">罗盘航向 0~360°，0=正北、顺时针</field>
+    </message>
+
+    <!-- 50106: 电池信息 -->
+    <message id="50106" name="HK_DRONE_BATTERY">
+      <description>电池信息，对应 DroneInfo 第 4 组</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="float" name="battery_voltage_v">电池电压（V）</field>
+      <field type="float" name="battery_current_a">电池电流（A）；AP 标准规定充电为正、放电为负</field>
+      <field type="float" name="battery_remaining_pct">剩余电量百分比（0~100）</field>
+      <field type="int32_t" name="battery_id">电池编号，单电池为 0</field>
+    </message>
+
+    <!-- 50107: GPS 原始信息 -->
+    <message id="50107" name="HK_DRONE_GPS">
+      <description>GPS 原始信息，对应 DroneInfo 第 5 组</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="uint8_t" name="gps_satellites">可见卫星数</field>
+      <field type="float" name="gps_hdop">水平精度因子；PX4=SensorGps.hdop，AP 模式下为 GPS_RAW_INT.eph</field>
+      <field type="uint8_t" name="gps_fix_type" enum="HK_GPS_FIX_TYPE">定位类型：0=无, 1=无, 2=2D, 3=3D, 4=RTK 固定, 5=RTK 浮点, 6=估计</field>
+      <field type="uint64_t" name="gps_time_utc_usec">GPS UTC 时间戳（微秒，Unix epoch）；0=无 GPS 时间</field>
+    </message>
+
+    <!-- 50108: 系统状态 -->
+    <message id="50108" name="HK_DRONE_SYSTEM_STATUS">
+      <description>系统状态与传感器位，对应 DroneInfo 第 6 组</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="uint32_t" name="sensors_present">传感器在位位掩码（MAV_SYS_STATUS_SENSOR_*）</field>
+      <field type="uint32_t" name="sensors_health">传感器健康位掩码（MAV_SYS_STATUS_SENSOR_*）</field>
+      <field type="float" name="fc_load_pct">飞控 CPU 负载百分比（0~100）</field>
+    </message>
+
+    <!-- 50109: 飞行控制 AI 状态 -->
+    <message id="50109" name="HK_DRONE_AI_STATUS">
+      <description>飞行控制 AI 状态，对应 DroneInfo 第 7 组</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="char[20]" name="ai_model_name">AI 模型名称</field>
+      <field type="char[10]" name="ai_model_version">AI 版本号</field>
+      <field type="uint8_t" name="ai_status">AI 状态：0=正常，1=故障</field>
+      <field type="uint16_t" name="ai_fault_code">故障码（正常时 0）</field>
+      <field type="uint16_t" name="ai_response_time_ms">AI 决策周期（ms）</field>
+    </message>
+
+    <!-- 50110: 电机状态数组 -->
+    <message id="50110" name="HK_DRONE_MOTOR_STATUS">
+      <description>电机状态数组，对应 DroneInfo 第 8 组；固定 12 槽</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="uint8_t" name="motor_count">实际有数据的电机数（不是 12）</field>
+      <field type="int32_t[12]" name="motor_rpm">电机转速（RPM），-1 表示无数据</field>
+      <field type="int8_t[12]" name="motor_temperature">电机温度（°C），-128 表示无数据</field>
+      <field type="float[12]" name="motor_thrust_pct">电机推力百分比（0~100），NaN 表示无数据</field>
+      <field type="uint8_t[12]" name="motor_status" enum="HK_MOTOR_STATUS_FLAG">电机状态，0=正常, 1=故障</field>
+    </message>
+
+    <!-- 50111: 飞行模式/起落/任务标志 -->
+    <message id="50111" name="HK_DRONE_FLIGHT_STATUS">
+      <description>飞行模式、起落状态与任务标志，对应 DroneInfo 第 9 组</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="uint8_t" name="flight_mode">PX4 nav_state；AP 模式由 APMavlinkAdapter 翻译</field>
+      <field type="uint8_t" name="is_armed">是否解锁，0=否，1=是</field>
+      <field type="uint8_t" name="land_state" enum="HK_LAND_STATE">起落状态：0=UNKNOWN, 1=ON_GROUND, 2=IN_AIR</field>
+      <field type="uint8_t" name="need_attack">策略 need_attack_ 标志</field>
+      <field type="uint8_t" name="task_finished">任务结束标志</field>
+      <field type="uint8_t" name="current_task_state" enum="HK_TASK_STATE">任务状态：0=WAIT_ATTACK, 1=FLY_TO_TARGET, 2=ADJUST_PATH, 3=ADJUST_ANGLE, 4=CIRCLE_SEARCH, 5=TURN_BACK, 6=WAIT_AUTHORITY</field>
+      <field type="uint8_t" name="guidance_mode" enum="HK_GUIDANCE_MODE">制导模式：0=TRACKING_ONLY, 1=PURE_PURSUIT, 2=PROPORTIONAL_NAVIGATION</field>
+    </message>
+
+    <!-- 50112: VTOL 状态与 Home 点 -->
+    <message id="50112" name="HK_DRONE_HOME_VTOL">
+      <description>VTOL 状态与 Home 点，对应 DroneInfo 第 10 组</description>
+      <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
+      <field type="uint8_t" name="vtol_state" enum="HK_VTOL_STATE">VTOL 状态：0=未定义, 1=转FW中, 2=转MC中, 3=MC, 4=FW</field>
+      <field type="uint8_t" name="home_valid">Home 是否已锁定（true 后 home_* 不再变）</field>
+      <field type="double" name="home_latitude_deg">Home 纬度（deg）</field>
+      <field type="double" name="home_longitude_deg">Home 经度（deg）</field>
+      <field type="double" name="home_altitude_m">Home 海拔（m）</field>
+    </message>
+
+    <!-- 50113: mavlink_bridge 自身心跳 -->
+    <message id="50113" name="HK_MAVLINK_BRIDGE_HEART">
+      <description>mavlink_bridge 自身状态心跳</description>
+      <field type="uint8_t" name="bridge_status" enum="HK_BRIDGE_STATUS">mavlink_bridge 状态：0=初始化中, 1=正常运行, 2=告警, 3=故障</field>
+    </message>
+
+    <!-- 50114: GPU 状态 -->
+    <message id="50114" name="HK_GPU_STATUS">
+      <description>GPU 状态；原 HK_AI_STATUS.gpu_* 迁移至此</description>
+      <field type="uint8_t" name="gpu_usage">GPU 使用率（%）</field>
+      <field type="int8_t" name="gpu_temperature">GPU 温度（°C）</field>
+    </message>
+
+    <!-- 50115: AI 目标识别结果 -->
+    <message id="50115" name="HK_DETECTION_RESULT">
+      <description>AI 目标识别结果，对应 ROS2 DetectionResult 核心数字字段</description>
+      <field type="uint64_t" name="timestamp_ms">时间戳（毫秒）</field>
+      <field type="uint8_t" name="status">AI 状态：0=INIT, 1=DETECTING, 2=RECOGNIZED, 3=TRACKING</field>
+      <field type="uint8_t" name="camera_index">相机索引：0=TELEPHOTO, 1=WIDE, 2=UNKNOWN</field>
+      <field type="uint8_t" name="level">消息级别</field>
+      <field type="uint8_t" name="ai_running">AI 是否运行中</field>
+      <field type="uint8_t" name="has_error">是否存在错误</field>
+      <field type="uint16_t" name="error_code">错误码</field>
+      <field type="uint8_t" name="tracked">是否已跟踪</field>
+      <field type="float" name="confidence">置信度</field>
+      <field type="float" name="track_score">跟踪分数</field>
+      <field type="float" name="horizontal_angle_rad">水平视线角（rad）</field>
+      <field type="float" name="vertical_angle_rad">垂直视线角（rad）</field>
+      <field type="float" name="distance_m">估计目标距离（m）</field>
+      <field type="float[4]" name="camera_position">相机安装参数 [x,y,z,yaw]</field>
+      <field type="float[4]" name="box">目标包围框 [x1,y1,x2,y2]</field>
+    </message>
+
+    <!-- 50116: AI 识别运行状态 -->
+    <message id="50116" name="HK_RECOGNITION_STATUS">
+      <description>AI 识别运行状态中的跟踪算法 AI 字段，对应 ROS2 RecognitionStatus 中的 track_* 字段</description>
+      <field type="uint64_t" name="timestamp_ms">时间戳（毫秒）</field>
+      <field type="char[20]" name="track_model_name">跟踪算法 AI 模型名称</field>
+      <field type="char[10]" name="track_version">跟踪算法 AI 版本号</field>
+      <field type="uint8_t" name="track_status">跟踪算法 AI 状态：0=正常, 1=故障</field>
+      <field type="uint16_t" name="track_fault_code">跟踪算法 AI 故障码（正常时 0）</field>
+      <field type="uint16_t" name="track_response_time">跟踪算法 AI 响应时间（ms）</field>
     </message>
 
     <!-- ===== 60000~60002：发射箱 / GNSS ↔ 地面站 ===== -->
