@@ -44,6 +44,10 @@
         <param index="2">触发时间（s）</param>
         <param index="3">功能开关（0=关, 1=开）</param>
       </entry>
+      <!-- 权限控制指令 54000 -->
+      <entry value="54000" name="HK_CMD_EMERGENCY_TAKEOVER">
+        <description>紧急接管</description>
+      </entry>
       <!-- 发射箱指令 61000~61001 -->
       <entry value="61000" name="HK_CMD_LID_OPEN">
         <description>发射箱开盖</description>

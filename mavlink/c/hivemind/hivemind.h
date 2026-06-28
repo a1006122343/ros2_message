@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_HIVEMIND.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_HIVEMIND_XML_HASH 7451053701253022482
+#define MAVLINK_HIVEMIND_XML_HASH 4744205119408969455
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,6 +47,7 @@ typedef enum HK_CMD
    HK_CMD_VIDEO_STOP_CAPTURE=52003, /* 停止录像 | */
    HK_CMD_SET_CAMERA_MODE=52004, /* 载荷切换 |camera_id|  */
    HK_CMD_SET_BEHAVIOR=53000, /* 失联行为配置 |行为类型（0=悬停, 1=返航）| 触发时间（s）| 功能开关（0=关, 1=开）|  */
+   HK_CMD_EMERGENCY_TAKEOVER=54000, /* 紧急接管 | */
    HK_CMD_LID_OPEN=61000, /* 发射箱开盖 |1=开 / 0=关|  */
    HK_CMD_LOCK_RELEASE=61001, /* 发射箱电磁锁扣解锁 |1=解锁 / 0=锁定|  */
    HK_CMD_ENUM_END=61002, /*  | */
