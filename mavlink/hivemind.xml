@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <mavlink>
   <include>common.xml</include>
   <version>3</version>
@@ -44,10 +44,6 @@
         <param index="2">触发时间（s）</param>
         <param index="3">功能开关（0=关, 1=开）</param>
       </entry>
-      <!-- 权限控制指令 54000 -->
-      <entry value="54000" name="HK_CMD_EMERGENCY_TAKEOVER">
-        <description>紧急接管</description>
-      </entry>
       <!-- 发射箱指令 61000~61001 -->
       <entry value="61000" name="HK_CMD_LID_OPEN">
         <description>发射箱开盖</description>
@@ -82,13 +78,13 @@
     <!-- ===== 任务状态 ===== -->
     <enum name="HK_TASK_STATE">
       <description>任务状态</description>
-      <entry value="0" name="HK_TASK_STATE_WAIT_ATTACK"><description>WAIT_ATTACK</description></entry>
-      <entry value="1" name="HK_TASK_STATE_FLY_TO_TARGET"><description>FLY_TO_TARGET</description></entry>
-      <entry value="2" name="HK_TASK_STATE_ADJUST_PATH"><description>ADJUST_PATH</description></entry>
-      <entry value="3" name="HK_TASK_STATE_ADJUST_ANGLE"><description>ADJUST_ANGLE</description></entry>
-      <entry value="4" name="HK_TASK_STATE_CIRCLE_SEARCH"><description>CIRCLE_SEARCH</description></entry>
-      <entry value="5" name="HK_TASK_STATE_TURN_BACK"><description>TURN_BACK</description></entry>
-      <entry value="6" name="HK_TASK_STATE_WAIT_AUTHORITY"><description>WAIT_AUTHORITY</description></entry>
+      <entry value="0" name="HK_TASK_STATE_WAIT_ATTACK"><description>等待打击</description></entry>
+      <entry value="1" name="HK_TASK_STATE_FLY_TO_TARGET"><description>飞向目标</description></entry>
+      <entry value="2" name="HK_TASK_STATE_ADJUST_PATH"><description>调整航路</description></entry>
+      <entry value="3" name="HK_TASK_STATE_ADJUST_ANGLE"><description>调整角度</description></entry>
+      <entry value="4" name="HK_TASK_STATE_CIRCLE_SEARCH"><description>盘旋搜索</description></entry>
+      <entry value="5" name="HK_TASK_STATE_TURN_BACK"><description>返航</description></entry>
+      <entry value="6" name="HK_TASK_STATE_WAIT_AUTHORITY"><description>等待权限</description></entry>
     </enum>
 
     <!-- ===== 制导模式 ===== -->
@@ -97,6 +93,42 @@
       <entry value="0" name="HK_GUIDANCE_MODE_TRACKING_ONLY"><description>TRACKING_ONLY</description></entry>
       <entry value="1" name="HK_GUIDANCE_MODE_PURE_PURSUIT"><description>PURE_PURSUIT</description></entry>
       <entry value="2" name="HK_GUIDANCE_MODE_PROPORTIONAL_NAVIGATION"><description>PROPORTIONAL_NAVIGATION</description></entry>
+    </enum>
+
+    <!-- ===== 飞行模式 ===== -->
+    <enum name="HK_FLIGHT_MODE">
+      <description>飞行模式，对应 DroneInfo.flight_mode / PX4 uORB VehicleStatus.nav_state；AP 模式由 APMavlinkAdapter 翻译为同一编号</description>
+      <entry value="0" name="HK_FLIGHT_MODE_MANUAL"><description>手动模式</description></entry>
+      <entry value="1" name="HK_FLIGHT_MODE_ALTCTL"><description>高度控制模式</description></entry>
+      <entry value="2" name="HK_FLIGHT_MODE_POSCTL"><description>位置控制模式</description></entry>
+      <entry value="3" name="HK_FLIGHT_MODE_AUTO_MISSION"><description>自动任务模式</description></entry>
+      <entry value="4" name="HK_FLIGHT_MODE_AUTO_LOITER"><description>自动悬停/盘旋模式</description></entry>
+      <entry value="5" name="HK_FLIGHT_MODE_AUTO_RTL"><description>自动返航模式</description></entry>
+      <entry value="6" name="HK_FLIGHT_MODE_POSITION_SLOW"><description>慢速位置模式</description></entry>
+      <entry value="7" name="HK_FLIGHT_MODE_FREE5"><description>保留模式 5</description></entry>
+      <entry value="8" name="HK_FLIGHT_MODE_FREE4"><description>保留模式 4</description></entry>
+      <entry value="9" name="HK_FLIGHT_MODE_FREE3"><description>保留模式 3</description></entry>
+      <entry value="10" name="HK_FLIGHT_MODE_ACRO"><description>特技模式</description></entry>
+      <entry value="11" name="HK_FLIGHT_MODE_FREE2"><description>保留模式 2</description></entry>
+      <entry value="12" name="HK_FLIGHT_MODE_DESCEND"><description>自动下降模式</description></entry>
+      <entry value="13" name="HK_FLIGHT_MODE_TERMINATION"><description>紧急终止模式</description></entry>
+      <entry value="14" name="HK_FLIGHT_MODE_OFFBOARD"><description>外部控制模式</description></entry>
+      <entry value="15" name="HK_FLIGHT_MODE_STAB"><description>自稳模式</description></entry>
+      <entry value="16" name="HK_FLIGHT_MODE_FREE1"><description>保留模式 1</description></entry>
+      <entry value="17" name="HK_FLIGHT_MODE_AUTO_TAKEOFF"><description>自动起飞模式</description></entry>
+      <entry value="18" name="HK_FLIGHT_MODE_AUTO_LAND"><description>自动降落模式</description></entry>
+      <entry value="19" name="HK_FLIGHT_MODE_AUTO_FOLLOW_TARGET"><description>自动跟踪目标模式</description></entry>
+      <entry value="20" name="HK_FLIGHT_MODE_AUTO_PRECLAND"><description>自动精准降落模式</description></entry>
+      <entry value="21" name="HK_FLIGHT_MODE_ORBIT"><description>环绕模式</description></entry>
+      <entry value="22" name="HK_FLIGHT_MODE_AUTO_VTOL_TAKEOFF"><description>自动垂直起降转换起飞模式</description></entry>
+      <entry value="23" name="HK_FLIGHT_MODE_EXTERNAL1"><description>外部自定义模式 1</description></entry>
+      <entry value="24" name="HK_FLIGHT_MODE_EXTERNAL2"><description>外部自定义模式 2</description></entry>
+      <entry value="25" name="HK_FLIGHT_MODE_EXTERNAL3"><description>外部自定义模式 3</description></entry>
+      <entry value="26" name="HK_FLIGHT_MODE_EXTERNAL4"><description>外部自定义模式 4</description></entry>
+      <entry value="27" name="HK_FLIGHT_MODE_EXTERNAL5"><description>外部自定义模式 5</description></entry>
+      <entry value="28" name="HK_FLIGHT_MODE_EXTERNAL6"><description>外部自定义模式 6</description></entry>
+      <entry value="29" name="HK_FLIGHT_MODE_EXTERNAL7"><description>外部自定义模式 7</description></entry>
+      <entry value="30" name="HK_FLIGHT_MODE_EXTERNAL8"><description>外部自定义模式 8</description></entry>
     </enum>
 
     <!-- ===== VTOL 状态 ===== -->
@@ -145,6 +177,15 @@
       <entry value="0" name="KILL_DESTROYED"><description>摧毁</description></entry>
       <entry value="1" name="KILL_HEAVY_DAMAGE"><description>重创</description></entry>
       <entry value="2" name="KILL_LIGHT_DAMAGE"><description>轻伤</description></entry>
+    </enum>
+
+    <!-- ===== 跟踪算法 AI 识别状态标签 ===== -->
+    <enum name="HK_TRACK_AI_STATUS_LABEL">
+      <description>跟踪算法 AI 状态文本枚举，对应 recognition_status/status_label</description>
+      <entry value="0" name="HK_TRACK_AI_STATUS_LABEL_INIT"><description>初始化</description></entry>
+      <entry value="1" name="HK_TRACK_AI_STATUS_LABEL_DETECTING"><description>检测中</description></entry>
+      <entry value="2" name="HK_TRACK_AI_STATUS_LABEL_RECOGNIZED"><description>已识别</description></entry>
+      <entry value="3" name="HK_TRACK_AI_STATUS_LABEL_TRACKING"><description>跟踪中</description></entry>
     </enum>
   </enums>
 
@@ -319,7 +360,7 @@
     <message id="50111" name="HK_DRONE_FLIGHT_STATUS">
       <description>飞行模式、起落状态与任务标志，对应 DroneInfo 第 9 组</description>
       <field type="uint64_t" name="timestamp_ms">ROS 时间戳（毫秒）</field>
-      <field type="uint8_t" name="flight_mode">PX4 nav_state；AP 模式由 APMavlinkAdapter 翻译</field>
+      <field type="uint8_t" name="flight_mode" enum="HK_FLIGHT_MODE">飞行模式，与 DroneInfo.flight_mode / PX4 nav_state 一致；AP 模式由 APMavlinkAdapter 翻译</field>
       <field type="uint8_t" name="is_armed">是否解锁，0=否，1=是</field>
       <field type="uint8_t" name="land_state" enum="HK_LAND_STATE">起落状态：0=UNKNOWN, 1=ON_GROUND, 2=IN_AIR</field>
       <field type="uint8_t" name="need_attack">策略 need_attack_ 标志</field>
@@ -381,6 +422,20 @@
       <field type="uint8_t" name="track_status">跟踪算法 AI 状态：0=正常, 1=故障</field>
       <field type="uint16_t" name="track_fault_code">跟踪算法 AI 故障码（正常时 0）</field>
       <field type="uint16_t" name="track_response_time">跟踪算法 AI 响应时间（ms）</field>
+    </message>
+
+    <!-- 50117: 跟踪算法 AI 关键状态日志（地面站记录） -->
+    <message id="50117" name="HK_TRACK_AI_KEY_LOG">
+      <description>跟踪算法 AI 关键状态日志字段，汇总 recognition_status 与 detection_result 核心字段，供地面站记录</description>
+      <field type="uint64_t" name="status_timestamp_ms">recognition_status 时间戳（毫秒）</field>
+      <field type="uint8_t" name="status" enum="HK_TRACK_AI_STATUS_LABEL">跟踪算法 AI 状态：0=INIT, 1=DETECTING, 2=RECOGNIZED, 3=TRACKING</field>
+      <field type="uint8_t" name="ai_running">识别主循环运行状态，0=停滞/异常，1=正常</field>
+      <field type="uint8_t" name="has_error">错误标志，0=正常，1=存在错误</field>
+      <field type="uint16_t" name="error_code">错误码，0=正常</field>
+      <field type="uint64_t" name="detection_timestamp_ms">detection_result 时间戳（毫秒）</field>
+      <field type="uint8_t" name="tracked">目标跟踪标志，0=未形成稳定跟踪，1=已进入跟踪链路</field>
+      <field type="float" name="horizontal_angle_rad">目标水平视线角（rad），图像中心为 0，左侧为负，右侧为正</field>
+      <field type="float" name="vertical_angle_rad">目标垂直视线角（rad），图像中心为 0，下方为负，上方为正</field>
     </message>
 
     <!-- ===== 60000~60002：发射箱 / GNSS ↔ 地面站 ===== -->

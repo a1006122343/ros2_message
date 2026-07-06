@@ -208,10 +208,12 @@ bool[12]   motor_status         # true=在线, false=离线/故障
 # =============================================================================
 # 9) 飞行模式 / 起落 / 任务标志
 # =============================================================================
-# flight_mode: PX4 uORB nav_state (uint8)；与 px4_msgs::msg::VehicleStatus 枚举一致：
-#   0=MANUAL, 1=ALTCTL, 2=POSCTL, 3=AUTO_LOITER, 4=AUTO_MISSION, 5=AUTO_RTL,
-#   6=ACRO, 7=OFFBOARD, 8=STAB, 9=AUTO_TAKEOFF, 10=AUTO_LAND, 11=AUTO_FOLLOW_TARGET,
-#   12=AUTO_PRECLAND, 13=ORBIT, 14=AUTO_VTOL_TAKEOFF, 15..22=EXTERNAL1..8
+# flight_mode: PX4 uORB VehicleStatus.nav_state (uint8)；与 px4_msgs::msg::VehicleStatus 枚举一致：
+#   0=MANUAL, 1=ALTCTL, 2=POSCTL, 3=AUTO_MISSION, 4=AUTO_LOITER, 5=AUTO_RTL,
+#   6=POSITION_SLOW, 7=FREE5, 8=FREE4, 9=FREE3, 10=ACRO, 11=FREE2,
+#   12=DESCEND, 13=TERMINATION, 14=OFFBOARD, 15=STAB, 16=FREE1,
+#   17=AUTO_TAKEOFF, 18=AUTO_LAND, 19=AUTO_FOLLOW_TARGET, 20=AUTO_PRECLAND,
+#   21=ORBIT, 22=AUTO_VTOL_TAKEOFF, 23..30=EXTERNAL1..8, 31=MAX
 #   AP 模式由 APMavlinkAdapter::handle_heartbeat 翻译成同样的编号
 uint8  flight_mode              # PX4 nav_state（详见上方枚举）；AP 模式翻译后用同一编号
 bool   is_armed                 # 飞控是否解锁；PX4: arming_state==2；AP: MAV_MODE_FLAG_SAFETY_ARMED bit

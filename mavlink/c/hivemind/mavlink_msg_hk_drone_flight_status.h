@@ -6,7 +6,7 @@
 
 typedef struct __mavlink_hk_drone_flight_status_t {
  uint64_t timestamp_ms; /*<  ROS 时间戳（毫秒）*/
- uint8_t flight_mode; /*<  PX4 nav_state；AP 模式由 APMavlinkAdapter 翻译*/
+ uint8_t flight_mode; /*<  飞行模式，与 DroneInfo.flight_mode / PX4 nav_state 一致；AP 模式由 APMavlinkAdapter 翻译*/
  uint8_t is_armed; /*<  是否解锁，0=否，1=是*/
  uint8_t land_state; /*<  起落状态：0=UNKNOWN, 1=ON_GROUND, 2=IN_AIR*/
  uint8_t need_attack; /*<  策略 need_attack_ 标志*/
@@ -63,7 +63,7 @@ typedef struct __mavlink_hk_drone_flight_status_t {
  * @param msg The MAVLink message to compress the data into
  *
  * @param timestamp_ms  ROS 时间戳（毫秒）
- * @param flight_mode  PX4 nav_state；AP 模式由 APMavlinkAdapter 翻译
+ * @param flight_mode  飞行模式，与 DroneInfo.flight_mode / PX4 nav_state 一致；AP 模式由 APMavlinkAdapter 翻译
  * @param is_armed  是否解锁，0=否，1=是
  * @param land_state  起落状态：0=UNKNOWN, 1=ON_GROUND, 2=IN_AIR
  * @param need_attack  策略 need_attack_ 标志
@@ -113,7 +113,7 @@ static inline uint16_t mavlink_msg_hk_drone_flight_status_pack(uint8_t system_id
  * @param msg The MAVLink message to compress the data into
  *
  * @param timestamp_ms  ROS 时间戳（毫秒）
- * @param flight_mode  PX4 nav_state；AP 模式由 APMavlinkAdapter 翻译
+ * @param flight_mode  飞行模式，与 DroneInfo.flight_mode / PX4 nav_state 一致；AP 模式由 APMavlinkAdapter 翻译
  * @param is_armed  是否解锁，0=否，1=是
  * @param land_state  起落状态：0=UNKNOWN, 1=ON_GROUND, 2=IN_AIR
  * @param need_attack  策略 need_attack_ 标志
@@ -166,7 +166,7 @@ static inline uint16_t mavlink_msg_hk_drone_flight_status_pack_status(uint8_t sy
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
  * @param timestamp_ms  ROS 时间戳（毫秒）
- * @param flight_mode  PX4 nav_state；AP 模式由 APMavlinkAdapter 翻译
+ * @param flight_mode  飞行模式，与 DroneInfo.flight_mode / PX4 nav_state 一致；AP 模式由 APMavlinkAdapter 翻译
  * @param is_armed  是否解锁，0=否，1=是
  * @param land_state  起落状态：0=UNKNOWN, 1=ON_GROUND, 2=IN_AIR
  * @param need_attack  策略 need_attack_ 标志
@@ -255,7 +255,7 @@ static inline uint16_t mavlink_msg_hk_drone_flight_status_encode_status(uint8_t 
  * @param chan MAVLink channel to send the message
  *
  * @param timestamp_ms  ROS 时间戳（毫秒）
- * @param flight_mode  PX4 nav_state；AP 模式由 APMavlinkAdapter 翻译
+ * @param flight_mode  飞行模式，与 DroneInfo.flight_mode / PX4 nav_state 一致；AP 模式由 APMavlinkAdapter 翻译
  * @param is_armed  是否解锁，0=否，1=是
  * @param land_state  起落状态：0=UNKNOWN, 1=ON_GROUND, 2=IN_AIR
  * @param need_attack  策略 need_attack_ 标志
@@ -364,7 +364,7 @@ static inline uint64_t mavlink_msg_hk_drone_flight_status_get_timestamp_ms(const
 /**
  * @brief Get field flight_mode from hk_drone_flight_status message
  *
- * @return  PX4 nav_state；AP 模式由 APMavlinkAdapter 翻译
+ * @return  飞行模式，与 DroneInfo.flight_mode / PX4 nav_state 一致；AP 模式由 APMavlinkAdapter 翻译
  */
 static inline uint8_t mavlink_msg_hk_drone_flight_status_get_flight_mode(const mavlink_message_t* msg)
 {

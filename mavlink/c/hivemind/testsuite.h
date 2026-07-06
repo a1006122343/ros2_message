@@ -1262,6 +1262,73 @@ static void mavlink_test_hk_recognition_status(uint8_t system_id, uint8_t compon
 #endif
 }
 
+static void mavlink_test_hk_track_ai_key_log(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+{
+#ifdef MAVLINK_STATUS_FLAG_OUT_MAVLINK1
+    mavlink_status_t *status = mavlink_get_channel_status(MAVLINK_COMM_0);
+        if ((status->flags & MAVLINK_STATUS_FLAG_OUT_MAVLINK1) && MAVLINK_MSG_ID_HK_TRACK_AI_KEY_LOG >= 256) {
+            return;
+        }
+#endif
+    mavlink_message_t msg;
+        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
+        uint16_t i;
+    mavlink_hk_track_ai_key_log_t packet_in = {
+        93372036854775807ULL,93372036854776311ULL,129.0,157.0,18483,211,22,89,156
+    };
+    mavlink_hk_track_ai_key_log_t packet1, packet2;
+        memset(&packet1, 0, sizeof(packet1));
+        packet1.status_timestamp_ms = packet_in.status_timestamp_ms;
+        packet1.detection_timestamp_ms = packet_in.detection_timestamp_ms;
+        packet1.horizontal_angle_rad = packet_in.horizontal_angle_rad;
+        packet1.vertical_angle_rad = packet_in.vertical_angle_rad;
+        packet1.error_code = packet_in.error_code;
+        packet1.status = packet_in.status;
+        packet1.ai_running = packet_in.ai_running;
+        packet1.has_error = packet_in.has_error;
+        packet1.tracked = packet_in.tracked;
+        
+        
+#ifdef MAVLINK_STATUS_FLAG_OUT_MAVLINK1
+        if (status->flags & MAVLINK_STATUS_FLAG_OUT_MAVLINK1) {
+           // cope with extensions
+           memset(MAVLINK_MSG_ID_HK_TRACK_AI_KEY_LOG_MIN_LEN + (char *)&packet1, 0, sizeof(packet1)-MAVLINK_MSG_ID_HK_TRACK_AI_KEY_LOG_MIN_LEN);
+        }
+#endif
+        memset(&packet2, 0, sizeof(packet2));
+    mavlink_msg_hk_track_ai_key_log_encode(system_id, component_id, &msg, &packet1);
+    mavlink_msg_hk_track_ai_key_log_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+    mavlink_msg_hk_track_ai_key_log_pack(system_id, component_id, &msg , packet1.status_timestamp_ms , packet1.status , packet1.ai_running , packet1.has_error , packet1.error_code , packet1.detection_timestamp_ms , packet1.tracked , packet1.horizontal_angle_rad , packet1.vertical_angle_rad );
+    mavlink_msg_hk_track_ai_key_log_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+    mavlink_msg_hk_track_ai_key_log_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.status_timestamp_ms , packet1.status , packet1.ai_running , packet1.has_error , packet1.error_code , packet1.detection_timestamp_ms , packet1.tracked , packet1.horizontal_angle_rad , packet1.vertical_angle_rad );
+    mavlink_msg_hk_track_ai_key_log_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+        mavlink_msg_to_send_buffer(buffer, &msg);
+        for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
+            comm_send_ch(MAVLINK_COMM_0, buffer[i]);
+        }
+    mavlink_msg_hk_track_ai_key_log_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+        
+        memset(&packet2, 0, sizeof(packet2));
+    mavlink_msg_hk_track_ai_key_log_send(MAVLINK_COMM_1 , packet1.status_timestamp_ms , packet1.status , packet1.ai_running , packet1.has_error , packet1.error_code , packet1.detection_timestamp_ms , packet1.tracked , packet1.horizontal_angle_rad , packet1.vertical_angle_rad );
+    mavlink_msg_hk_track_ai_key_log_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("HK_TRACK_AI_KEY_LOG") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_HK_TRACK_AI_KEY_LOG) != NULL);
+#endif
+}
+
 static void mavlink_test_hk_launcher_status(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
 {
 #ifdef MAVLINK_STATUS_FLAG_OUT_MAVLINK1
@@ -1471,6 +1538,7 @@ static void mavlink_test_hivemind(uint8_t system_id, uint8_t component_id, mavli
     mavlink_test_hk_gpu_status(system_id, component_id, last_msg);
     mavlink_test_hk_detection_result(system_id, component_id, last_msg);
     mavlink_test_hk_recognition_status(system_id, component_id, last_msg);
+    mavlink_test_hk_track_ai_key_log(system_id, component_id, last_msg);
     mavlink_test_hk_launcher_status(system_id, component_id, last_msg);
     mavlink_test_hk_launcher_detail(system_id, component_id, last_msg);
     mavlink_test_hk_gcs_position(system_id, component_id, last_msg);
