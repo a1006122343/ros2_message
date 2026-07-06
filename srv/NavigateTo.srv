@@ -1,5 +1,24 @@
 float64 latitude
 float64 longitude
 float64 altitude
+float64 speed
 ---
+# 错误码含义：
+# ERROR_OK                   = 0  成功
+# ERROR_FC_NOT_CONNECTED     = 1  飞控未连接
+# ERROR_FC_NOT_READY         = 2  飞控未就绪（未通过预检/home/gps等）
+# ERROR_IN_WAIT_AUTHORITY    = 3  当前处于 WAIT_AUTHORITY（人工接管/外部权限），不接受航点指令
+# ERROR_NOT_IN_AIR           = 4  无人机未在空中
+# ERROR_NO_HOME_POSITION     = 5  无有效 home 位置，无法做 LLA->NED 转换
+# ERROR_NAVIGATE_ALREADY_ACTIVE = 6  当前已有航点飞行任务在执行，为避免速度反向导致不稳定，拒绝新指令
+# ERROR_SPEED_TOO_HIGH       = 7  当前水平速度 ≥ 5m/s，不接受新航点指令（避免刚点完悬停/Loiter 又立即切航点导致速度反向）
+uint8 ERROR_OK=0
+uint8 ERROR_FC_NOT_CONNECTED=1
+uint8 ERROR_FC_NOT_READY=2
+uint8 ERROR_IN_WAIT_AUTHORITY=3
+uint8 ERROR_NOT_IN_AIR=4
+uint8 ERROR_NO_HOME_POSITION=5
+uint8 ERROR_NAVIGATE_ALREADY_ACTIVE=6
+uint8 ERROR_SPEED_TOO_HIGH=7
 bool success
+uint8 error_code

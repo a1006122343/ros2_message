@@ -1,2 +1,14 @@
 ---
+# 错误码含义：
+# ERROR_OK                   = 0  成功
+# ERROR_FC_NOT_CONNECTED     = 1  飞控未连接
+# ERROR_FC_NOT_READY         = 2  飞控未就绪（未通过预检/home/gps等）
+# ERROR_NOT_IN_WAIT_ATTACK   = 3  当前不在 WAIT_ATTACK 状态
+# ERROR_FLIGHT_MODE_NOT_HOLD = 4  当前飞行模式不是 HOLD (AUTO_LOITER)
+uint8 ERROR_OK=0
+uint8 ERROR_FC_NOT_CONNECTED=1
+uint8 ERROR_FC_NOT_READY=2
+uint8 ERROR_NOT_IN_WAIT_ATTACK=3
+uint8 ERROR_FLIGHT_MODE_NOT_HOLD=4
 bool success
+uint8 error_code
