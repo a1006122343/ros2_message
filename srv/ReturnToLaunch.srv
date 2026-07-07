@@ -1,2 +1,14 @@
 ---
+# 错误码含义：
+# ERROR_OK                   = 0  成功
+# ERROR_FC_NOT_CONNECTED     = 1  飞控未连接
+# ERROR_FC_NOT_READY         = 2  飞控未就绪（未通过预检/home/gps等）
+# ERROR_IN_WAIT_AUTHORITY    = 3  当前处于 WAIT_AUTHORITY（人工接管/外部权限），不接受返航指令
+# ERROR_NOT_IN_AIR           = 4  无人机未在空中
+uint8 ERROR_OK=0
+uint8 ERROR_FC_NOT_CONNECTED=1
+uint8 ERROR_FC_NOT_READY=2
+uint8 ERROR_IN_WAIT_AUTHORITY=3
+uint8 ERROR_NOT_IN_AIR=4
 bool success
+uint8 error_code
